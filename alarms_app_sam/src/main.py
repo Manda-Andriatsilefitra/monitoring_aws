@@ -1,6 +1,5 @@
 import logging
-from abc import ABC, abstractmethod
-from alarms_app_sam.src.service.alarms_service import main_threshold
+from service.alarms_service import main_threshold
 from service.sns_service import put_sns_service
 
 logger = logging.getLogger()

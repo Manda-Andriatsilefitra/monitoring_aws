@@ -1,6 +1,6 @@
 import logging
 import json
-from alarms_app_sam.src.service.parser_service import StandardPathParser, QueuePathParser
+from service.parser_service import StandardPathParser, QueuePathParser
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)

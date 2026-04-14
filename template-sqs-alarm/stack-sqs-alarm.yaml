@@ -20,7 +20,7 @@ Parameters:
 
 Resources:
   # L'Alarme sqs
-  AbsenceOfLogsAlarm:
+  ThreasholdQueue:
     Type: AWS::CloudWatch::Alarm
     Properties:
       AlarmName: !Sub "alarm-monitor-${client}-${EnvironmentName}-${QueueName}"
@@ -35,12 +35,18 @@ Resources:
         - Name: QueueName
           Value: !Ref QueueName
 
+      Statistic: Average
+
       # Condition : Plus grand que le seuil >100
       Threshold: !Ref ThresholdMessages
       ComparisonOperator: GreaterThanThreshold
+
+      # 3 points sur 5 doivent être en dépassement
+      EvaluationPeriods: 5
+      DatapointsToAlarm: 3
+      Period: 60
 
       # Gestion des données manquantes : 
       # Si pas de métrique, on considère qu'il y a 0 message (donc pas d'alarme)
       TreatMissingData: notBreaching 
 
-  
