@@ -1,0 +1,13 @@
+version = 0.1
+[dev.deploy.parameters]
+stack_name = "producer-alarm-monitoring"
+resolve_s3 = true
+s3_prefix = "producer-alarm-monitoring/dev"
+region = "eu-west-1"
+profile = "879381257984_AWS-Sandbox-AdminAccess"
+confirm_changeset = false
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = [
+    "EnvironmentName=dev",
+    "client=mgitservice"
+]

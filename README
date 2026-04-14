@@ -7,6 +7,8 @@
 
 
 # DEPLOIEMENT
+Créer l'environnement virtuel
+Installer les dépendances
 
 # 1. DEPLOYER SNS TOPIC
    cd template-cf-sns-topic
@@ -22,8 +24,13 @@
    sam build
    sam deploy --config-env dev
 
-# 3. DEPLOYER UN LOG ALARM
-   cd ../log-alarm/template-cf-log-alarm
+# 3. DEPLOYER SAM (ENVOIE DES MESSAGE D'ALARM) PRODUCER DE SNS
+   cd ../alarms_app_sam
+   sam build
+   sam deploy --config-env dev
+
+# 4. DEPLOYER UN LOG ALARM (BREACHING LOG)
+   cd ../template-cf-log-alarm
    aws cloudformation deploy \
     --template-file stack-log-alarm.yaml \
     --stack-name stack-log-alarm-putlog-dev-mgitservice \
@@ -31,17 +38,21 @@
     --region eu-west-1 \
     --profile 879381257984_AWS-Sandbox-AdminAccess
 
-# 4. DEPLOYER SAM ENVOIE alert log-alarm VERS SNS
-   cd ../sam-app-sns-producer-log-alarm
+# 5. DEPLOYER UN ALARM SQS (THRESHOLD)
+   cd ../template-sqs-alarm
+   aws cloudformation deploy \
+    --template-file stack-sqs-alarm.yaml \
+    --stack-name stack-sqs-alarm-putlog-dev-mgitservice \
+    --parameter-overrides QueueName=/mgitservice-dev-putlog client=mgitservice ThresholdMessages=100 EnvironmentName=dev \
+    --region eu-west-1 \
+    --profile 879381257984_AWS-Sandbox-AdminAccess
+
+# 6. DEPLOYER SAM PRODUCER SUBSCRIPTION FILTER
+   cd ../log-subscription/sam-app-sns-producer-log-subscription-error
    sam build
    sam deploy --config-env dev
 
-# 5. DEPLOYER SAM PRODUCER SUBSCRIPTION FILTER
-   cd ../../log-subscription/sam-app-sns-producer-log-subscription-error
-   sam build
-   sam deploy --config-env dev
-
-# 6. DEPLOYER CLOUDFORMATION LOG SUBSCRIPTION FILTER
+# 7. DEPLOYER CLOUDFORMATION LOG SUBSCRIPTION FILTER
    cd ../template-cf-log-subscription-filter-error
    aws cloudformation deploy \
     --template-file template-log-subscription.yaml \
