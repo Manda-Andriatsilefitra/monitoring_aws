@@ -50,7 +50,7 @@ def lambda_handler(event, context):
 
             put_message_slack(canal, message_text)
         except Exception as e:
-            print(f"Erreur lors du traitement : {str(e)}")
+            print(f"Erreur lors du traitement du message venant de sns: {str(e)}")
             raise e
 
         return {"message": "Envoie vers slack finit"}
