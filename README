@@ -34,7 +34,7 @@ Installer les dépendances
    aws cloudformation deploy \
     --template-file stack-log-alarm.yaml \
     --stack-name stack-log-alarm-putlog-dev-mgitservice \
-    --parameter-overrides LogGroupName=/mgitservice/dev/putlog client=mgitservice PeriodAlarm=300 \
+    --parameter-overrides LogGroupName=/mgitservice/dev/putlog client=mgitservice PeriodAlarm=300 EnvironmentName=dev \
     --region eu-west-1 \
     --profile 879381257984_AWS-Sandbox-AdminAccess
 

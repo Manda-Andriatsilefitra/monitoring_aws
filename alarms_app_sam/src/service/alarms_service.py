@@ -4,6 +4,8 @@ from service.parser_service import StandardPathParser, QueuePathParser
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
+
+
 def main_threshold(event, requestId):
     try:
         # --- Extraction sécurisée des infos de l'alarme ---
@@ -17,7 +19,11 @@ def main_threshold(event, requestId):
         log_group_name = "Inconnu"
 
         # Initier les variables pour l'environnement des ressources
-        client, app_name, environnement = "client-inconnu", "application-inconnu", "environnement-inconnu"
+        client, app_name, environnement = (
+            "client-inconnu",
+            "application-inconnu",
+            "environnement-inconnu",
+        )
 
         metrics = detail.get("configuration", {}).get("metrics", [])
         if metrics and len(metrics) > 0:
@@ -35,7 +41,9 @@ def main_threshold(event, requestId):
             elif "LogGroupName" in dimensions:
                 log_group_name = dimensions.get("LogGroupName")
 
-            reason_data_str = state.get("reasonData") or previous_state.get("reasonData")
+            reason_data_str = state.get("reasonData") or previous_state.get(
+                "reasonData"
+            )
 
             threshold = None
             threshold_display = "Inconnu"
@@ -52,9 +60,8 @@ def main_threshold(event, requestId):
                 parser_standard = StandardPathParser()
                 client, app_name, environnement = parser_standard.parse(log_group_name)
 
-                slack_message1: str = f"*Log Group: {log_group_name} *"
+                slack_message1: str = f"Log Group: {log_group_name}"
                 slack_message2: str = f"Aucun log reçu au cours des {period_text}"
-
 
             # Formater le message pour les types de ressources "AWS/SQS" et "AWS/AmazonMQ"
             elif namespace in ["AWS/SQS", "AWS/AmazonMQ"]:
@@ -62,7 +69,11 @@ def main_threshold(event, requestId):
                     reason_data = json.loads(reason_data_str)
                     threshold = reason_data.get("threshold")
 
-                    if threshold is not None and isinstance(threshold, (int, float)) and float(threshold).is_integer():
+                    if (
+                        threshold is not None
+                        and isinstance(threshold, (int, float))
+                        and float(threshold).is_integer()
+                    ):
                         threshold_display = int(threshold)
                     else:
                         if threshold is not None:
@@ -71,20 +82,24 @@ def main_threshold(event, requestId):
                 parser_queue = QueuePathParser()
                 client, app_name, environnement = parser_queue.parse(queue_name)
 
-                slack_message1: str = f"*Queue: {queue_name}*"
-                slack_message2: str = f"La file d'attente dépasse le seuil {threshold_display}"
+                slack_message1: str = f"Queue: {queue_name}"
+                slack_message2: str = (
+                    f"La file d'attente dépasse le seuil {threshold_display}"
+                )
 
             else:
                 # Au cas où l'alarm provient d'autres ressources inconnus
-                slack_message1: str = (f"*Alarme CloudWatch: {alarm_name}*")
-                slack_message2: str = (f"Type de ressource non reconnu (Namespace: {namespace})")
+                slack_message1: str = f"Alarme CloudWatch: {alarm_name}"
+                slack_message2: str = (
+                    f"Type de ressource non reconnu (Namespace: {namespace})"
+                )
 
             # Le type d'alert (niveau)
-            type_alert="error"
+            type_alert = "error"
 
             # Le nom du canal webhook (à définir selon les besoins)
-            channel_slack=app_name
-            
+            channel_slack = app_name
+
             message_body = {
                 "type": type_alert,
                 "platform": client,
@@ -94,7 +109,7 @@ def main_threshold(event, requestId):
                 "slackMessage2": slack_message2,
                 "requestId": requestId,
                 "slack": True,
-                "channel": channel_slack
+                "channel": channel_slack,
             }
             return message_body
 

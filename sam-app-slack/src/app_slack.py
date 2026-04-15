@@ -40,7 +40,7 @@ def lambda_handler(event, context):
 
             alert_emoji = config_emoji[type_alert].get("emoji")
 
-            lines = [f"{alert_emoji} {subject}"]
+            lines = [f"*{alert_emoji} {subject.upper()}*"]
 
             lines.append(f"{message1}. {message2}")
 
