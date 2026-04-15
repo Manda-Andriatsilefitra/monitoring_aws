@@ -23,7 +23,7 @@ Resources:
   ThreasholdQueue:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmName: !Sub "alarm-monitor-${client}-${EnvironmentName}-${QueueName}"
+      AlarmName: !Sub "alarm-monitor-${client}-${EnvironmentName}-threshold-${QueueName}"
       AlarmDescription: !Sub "Alarme si plus de ${ThresholdMessages} messages dans la file ${QueueName}"
       
       # Métrique spécifique à SQS

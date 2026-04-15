@@ -62,6 +62,6 @@ class QueuePathParser(Parser):
         if len(parts) >= 3:
             client = parts[0]
             environnement = parts[1]
-            app_name = parts[2:]
+            app_name = "-".join(parts[2:])
             return client, app_name, environnement
         return "client-inconnue", "app-inconnue", "plateforme-inconnue"

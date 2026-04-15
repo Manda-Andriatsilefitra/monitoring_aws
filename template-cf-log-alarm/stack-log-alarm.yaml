@@ -20,7 +20,7 @@ Resources:
   AbsenceOfLogsAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmName: !Sub "alarm-monitor-${client}-${EnvironmentName}-${LogGroupName}"  # Pattern 
+      AlarmName: !Sub "alarm-monitor-${client}-${EnvironmentName}-${LogGroupName}" # Pattern
       AlarmDescription: !Sub "Alarme pour la log group:${LogGroupName}"
       MetricName: "IncomingLogEvents"
       Namespace: "AWS/Logs"

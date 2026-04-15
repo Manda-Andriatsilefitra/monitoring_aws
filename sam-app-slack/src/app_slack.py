@@ -24,13 +24,15 @@ def lambda_handler(event, context):
             client = data.get("platform")
             env = data.get("env")
 
-            # On formate le subject en gras pour la lisibilité
+            # On formate le subject pour la lisibilité
             subject = (
-                f"{client.capitalize()} {app_name.capitalize()} {env.capitalize()}"
+                f"{client} {app_name} {env}"
             )
 
             # Les éléments pour le message
             canal = data.get("channel")
+            logger.info(f"Le canal webhook: {canal}")
+            
             request_id = data.get("requestId")
             message1 = data.get("slackMessage1")
             message2 = data.get("slackMessage2")
